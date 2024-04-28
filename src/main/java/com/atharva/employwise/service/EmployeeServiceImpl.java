@@ -48,10 +48,12 @@ public class EmployeeServiceImpl implements EmployeeService {
                     .profileImage(employeeRequestDTO.getProfileImage())
                     .build();
 
+            UUID employeeId = employeeRepository.save(employee).getId();
+
             Employee manager = employeeRepository.getEmployeeById(String.valueOf(employee.getReportsTo()));
             emailSendingExecutor.sendEmailAsync(manager.getEmail(), employee);
 
-            return employeeRepository.save(employee).getId();
+            return employeeId;
 
         } catch (Exception e) {
             throw new EmployeeException("Failed to add employee", e);
