@@ -15,8 +15,15 @@ public class EmailSendingExecutor {
 
     public void sendEmailAsync(String toEmail, Employee employee) {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
-        executorService.submit(() -> emailSenderService.sendMail(toEmail, employee));
-        executorService.shutdown();
+        executorService.submit(() -> {
+            try {
+                emailSenderService.sendMail(toEmail, employee);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                executorService.shutdown();
+            }
+        });
     }
 }
 
